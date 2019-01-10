@@ -1,15 +1,10 @@
-#include <opencv2/opencv.hpp>
-#include <iostream>
+#include "chapter1.h"
 
 
 
 int main() {
 
-    cv::Mat image = cv::imread("images/lena.jpg", cv::IMREAD_COLOR);
-
-    cv::imshow("Image", image);
-
-    cv::waitKey();
+    chapter1();
 
     return 0;
 }
