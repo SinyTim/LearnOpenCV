@@ -4,7 +4,7 @@
 
 int main() {
 
-    chapter1();
+    Chapter1::run();
 
     return 0;
 }
