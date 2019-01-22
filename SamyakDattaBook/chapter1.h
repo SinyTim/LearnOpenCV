@@ -19,7 +19,7 @@ public:
         cv::resize(image, image, cv::Size(), 0.3, 0.3);
 
         //testTraversals(image);
-        testLUT(image);
+        //testLUT(image);
 
         cv::waitKey(0);
     }
@@ -57,7 +57,16 @@ public:
         auto f = std::bind(logTransform, std::placeholders::_1, maxValue);
         processImage(imageCopy, f);*/
 
-        //logTransform(imageCopy);
+        //logTransformImage(imageCopy);
+
+        /*double maxValue = 0;
+        cv::minMaxLoc(imageCopy, nullptr, &maxValue);
+        auto f = std::bind(expTransform, std::placeholders::_1, maxValue);
+        processImage(imageCopy, f);*/
+
+        //expTransformImage(imageCopy);
+
+        //cv::LUT(imageCopy, getLutMat(negativeTransform), imageCopy);
 
         cv::imshow("Processed image", imageCopy);
     }
@@ -160,6 +169,17 @@ private:
         return lut;
     }
 
+    static cv::Mat getLutMat(const std::function<uchar(uchar)>& transform) {
+
+        cv::Mat lut(1, 256, CV_8U);
+
+        for (size_t i = 0; i < 256; ++i) {
+            lut.at<uchar>(0, i) = transform(static_cast<uchar>(i));
+        }
+
+        return lut;
+    }
+
     static uchar identityTransform(uchar pixel) {
         return pixel;
     }
@@ -191,11 +211,29 @@ private:
         return static_cast<uchar>(c * std::log10(1 + pixel));
     }
 
-    static void logTransform(cv::Mat& image) {
+    static void logTransformImage(cv::Mat& image) {
         image.convertTo(image, CV_32F);
         image += 1;
         cv::log(image, image);
         cv::normalize(image, image, 0, 255, cv::NORM_MINMAX);
         cv::convertScaleAbs(image, image);
     }
+
+    static uchar expTransform(uchar pixel, uchar maxValue) {
+        static const double BASE = 1.02;
+        double c = 255.0 / (std::pow(BASE, maxValue) - 1); 
+        return static_cast<uchar>(c * (std::pow(BASE, pixel) - 1));
+    }
+
+    static void expTransformImage(cv::Mat& image) {
+        static const double C = cv::log(1.02);
+        image.convertTo(image, CV_32F);
+        image *= C;
+        cv::exp(image, image);
+        image -= 1;
+        cv::normalize(image, image, 0, 255, cv::NORM_MINMAX);
+        cv::convertScaleAbs(image, image);
+    }
+
+    // ---
 };
