@@ -11,9 +11,12 @@ public:
 
     static void run() {
 
-        //cv::Mat image = cv::imread("images/lena.jpg", cv::IMREAD_GRAYSCALE);
-        cv::Mat image = cv::imread("images/td.jpg", cv::IMREAD_GRAYSCALE);
-        cv::resize(image, image, cv::Size(), 0.3, 0.3);
+        const std::string fileName = "td.jpg";  // lena.jpg  td.jpg  mandelbrot1/2.png
+        const std::string filePath = "images/" + fileName;
+        const float scale = 0.3f;
+
+        cv::Mat image = cv::imread(filePath, cv::IMREAD_GRAYSCALE);
+        cv::resize(image, image, cv::Size(), scale, scale);
         cv::imshow("Image", image);
 
         //testBoxFilter(image);
@@ -21,6 +24,8 @@ public:
         //printGaussianKernel();
         //testGaussian(image);
         //testOwnFilter(image);
+
+        vignetting(image);
 
         cv::waitKey(0);
     }
@@ -94,6 +99,37 @@ private:
                  0, cv::BORDER_REPLICATE);
         
         imshow("Filtered", filteredImage);
+    }
+
+    // ---
+    //
+    // Vignetting:
+
+    static void vignetting(const cv::Mat& image) {
+        
+        auto mask = getGaussianSquareNormalMaskForMat(image, 100.0);
+
+        cv::Mat processedImage;
+        image.convertTo(processedImage, CV_64F);
+
+        cv::multiply(mask, processedImage, processedImage);
+        cv::convertScaleAbs(processedImage, processedImage);
+
+        cv::imshow("Processed image", processedImage);
+    }
+
+    static cv::Mat getGaussianSquareNormalMaskForMat(const cv::Mat& mat, double sigma) {
+
+        cv::Mat kernelX = cv::getGaussianKernel(mat.cols, sigma);
+        transpose(kernelX, kernelX);
+
+        cv::Mat kernelY = cv::getGaussianKernel(mat.rows, sigma);
+
+        cv::Mat kernel = kernelY * kernelX;
+
+        cv::normalize(kernel, kernel, 0, 1, cv::NORM_MINMAX);
+
+        return kernel;
     }
 
     // ---

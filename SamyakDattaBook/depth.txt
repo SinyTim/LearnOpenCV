@@ -1,0 +1,8 @@
+
+0  CV_8U   unsigned char   8-bit
+1  CV_8S   signed char     8-bit
+2  CV_16U  unsigned short  16-bit
+3  CV_16S  signed short    16-bit
+4  CV_32S  int             32-bit
+5  CV_32F  float           32-bit
+6  CV_64F  double          64-bit
