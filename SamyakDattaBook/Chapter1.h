@@ -4,7 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <functional>
-#include "measureTime.h"
+#include "TimeUtilities.h"
 
 
 
@@ -19,7 +19,7 @@ public:
         cv::resize(image, image, cv::Size(), 0.3, 0.3);
 
         //testTraversals(image);
-        //testLUT(image);
+        testLUT(image);
 
         cv::waitKey(0);
     }
@@ -30,9 +30,9 @@ public:
 
         cv::imshow("Image", imageCopy);
 
-        measureTime(clearRedChannel, imageCopy);
-        measureTime(clearGreenChannel, imageCopy);
-        measureTime(clearBlueChannel, imageCopy);
+        TimeUtilities::measureTime(clearRedChannel, imageCopy);
+        TimeUtilities::measureTime(clearGreenChannel, imageCopy);
+        TimeUtilities::measureTime(clearBlueChannel, imageCopy);
 
         cv::imshow("Processed image", imageCopy);
 
@@ -66,7 +66,7 @@ public:
 
         //expTransformImage(imageCopy);
 
-        //cv::LUT(imageCopy, getLutMat(negativeTransform), imageCopy);
+        cv::LUT(imageCopy, getLutMat(negativeTransform), imageCopy);
 
         cv::imshow("Processed image", imageCopy);
     }

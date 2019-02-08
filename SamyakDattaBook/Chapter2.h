@@ -27,6 +27,8 @@ public:
 
 private:
 
+    // Blurring:
+
     static void testBoxFilter(const cv::Mat& image) {
 
         cv::Mat filteredImage;
@@ -93,4 +95,6 @@ private:
         
         imshow("Filtered", filteredImage);
     }
+
+    // ---
 };
