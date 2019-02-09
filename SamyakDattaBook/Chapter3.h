@@ -46,7 +46,7 @@ private:
         cv::Mat binaryImage;
 
         cv::adaptiveThreshold(image, binaryImage, 
-                              200, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY, 51, 0.0);
+                              100, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY, 51, 0.0);
 
         cv::imshow("Binary image", binaryImage);
 
