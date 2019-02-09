@@ -11,7 +11,7 @@ public:
 
     static void run() {
 
-        const std::string fileName = "td.jpg";  // lena.jpg  td.jpg  mandelbrot1/2.png
+        const std::string fileName = "td2.jpg";  // lena.jpg  td1/2.jpg  mandelbrot1/2.png
         const std::string filePath = "images/" + fileName;
         const float scale = 0.3f;
 
