@@ -18,7 +18,8 @@ public:
         cv::resize(image, image, cv::Size(), scale, scale);
         cv::imshow("Image", image);
 
-        printHistogram(image);
+        //printHistogram(image);
+        plotHistogram(image);
 
         cv::waitKey(0);
     }
@@ -56,5 +57,39 @@ private:
             std::cout << i << ": " << histogram.at<float>(i, 0) << "\n";
         }
     }
-};
 
+    static void plotHistogram(const cv::Mat& image) {
+
+        cv::Mat histogram = getHistogram(image);
+
+        const int plotWidth = 1024;
+        const int plotHeight = 400;
+        const int binWidth = (plotWidth / histogram.rows);
+        
+        const cv::Scalar black(0, 0, 0);
+        const cv::Scalar blue(255, 0, 0);
+        const int thickness = 2;
+
+        cv::Mat histogramPlot(plotHeight, plotWidth, CV_8UC3, black);
+        cv::normalize(histogram, histogram, 0, plotHeight, cv::NORM_MINMAX);
+
+        for (int i = 1; i < histogram.rows; ++i) {
+
+            cv::Point from(
+                binWidth * (i - 1), 
+                plotHeight - cvRound(histogram.at<float>(i - 1, 0))
+            );
+
+            cv::Point to(
+                binWidth * i, 
+                plotHeight - cvRound(histogram.at<float>(i, 0))
+            );
+
+            cv::line(histogramPlot, from, to, blue, thickness);
+        }
+
+        cv::imshow("Histogram", histogramPlot);
+    }
+
+    // ---
+};
